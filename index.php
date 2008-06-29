@@ -2,7 +2,7 @@
 require('inc/header.php');
 ?>
 
-<p>ViewGit is a git web repository viewer that aims to be easy to set up and upgrade, light on dependencies, and comfortable to use.</p>
+<p>ViewGit is a <a href="http://git.or.cz/">git</a> web repository viewer that aims to be easy to set up and upgrade, light on <a href="requirements">dependencies</a>, and comfortable to use.</p>
 
 <h2>Features</h2>
 
@@ -19,7 +19,7 @@ require('inc/header.php');
 	<li>(Optional) Checkouts using mod_rewrite and git-update-server-info in .git/hooks/post-update</li>
 	<li>Alternative project list configuration using globs/wildcards (useful for mass hosting of projects)</li>
 	<li>Optional e-mail address obfuscator</li>
-	<li>Optional GeSHi support (not bundled)</li>
+	<li>Optional <a href="http://qbnz.com/highlighter/">GeSHi</a> support (not bundled)</li>
 </ul>
 
 <?php

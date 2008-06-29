@@ -19,6 +19,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 	<li><a href="requirements">Requirements</a></li>
 	<li><a href="demo">Demo</a></li>
 	<li><a href="download">Download</a></li>
+	<li><a href="development">Development</a></li>
 	<li><a href="">Links</a></li>
 </ul>
 </div>
