@@ -14,9 +14,8 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 
 <div id="nav">
 <ul>
-	<li><a href=".">About</a></li>
+	<li><a href=".">About &amp; features</a></li>
 	<li><a href="license">License</a></li>
-	<li><a href="">Features</a></li>
 	<li><a href="requirements">Requirements</a></li>
 	<li><a href="demo">Demo</a></li>
 	<li><a href="download">Download</a></li>
@@ -25,4 +24,3 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 </div>
 
 <div id="content">
-

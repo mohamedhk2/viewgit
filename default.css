@@ -3,18 +3,33 @@
  */
 
 body {
-	color: black;
+	color: #444;
 	background-color: white;
+}
+
+h1 {
+	font-style: italic;
+	font-size: 140%;
+	margin: 0;
+}
+
+h2 {
+	font-size: 120%;
+	font-weight: bold;
+	border-bottom: 1px solid black;
 }
 
 #nav {
 	border-top: 1px solid black;
+	display: block;
+	width: 100%;
+	min-height: 2em;
 }
 
 #nav ul {
-	display: block;
 	margin: 0;
 	padding: 0;
+	display: inline;
 }
 
 #nav ul li {
@@ -33,9 +48,20 @@ body {
 	padding-left: 0.5em;
 }
 
+#nav a:before {
+	content: '[';
+}
+
+#nav a:after {
+	content: ']';
+}
+
 #nav a:hover {
 	color: #f55;
 	background-color: #ddd;
 	border-bottom: 2px solid black;
+}
+
+#content {
 }
 
