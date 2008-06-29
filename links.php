@@ -1,4 +1,5 @@
 <?php
+$title = 'Links';
 require('inc/header.php');
 ?>
 

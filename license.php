@@ -1,4 +1,5 @@
 <?php
+$title = 'License';
 require('inc/header.php');
 ?>
 

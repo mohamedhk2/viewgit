@@ -1,4 +1,5 @@
 <?php
+$title = 'Requirements';
 require('inc/header.php');
 ?>
 
