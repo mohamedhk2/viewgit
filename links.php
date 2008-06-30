@@ -10,7 +10,7 @@ require('inc/header.php');
 	<li><a href="http://code.google.com/p/git-php/">git-php - a robust PHP web interface to git repositories</a> and <a href="http://people.proekspert.ee/peeter/git/git.php">a fork by Peeter Vois</a>.</li>
 </ul>
 
-<p>Also the following revision control system -related projects from the same author may be of interest:
+<p>Also the following revision control system -related projects from the same author may be of interest:</p>
 
 <ul>
 	<li><a href="http://gitstats.sourceforge.net/">GitStats - git history statistics generator</a></li>

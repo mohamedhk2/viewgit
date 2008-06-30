@@ -10,7 +10,8 @@ ViewGit is licensed under <a href="http://www.fsf.org/licensing/licenses/agpl-3.
 
 <pre>
 <?php
-include('agpl-3.0.txt');
+$data = file_get_contents('agpl-3.0.txt');
+echo htmlentities($data);
 ?>
 </pre>
 
