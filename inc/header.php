@@ -22,6 +22,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 	<li><a href="download">Download</a></li>
 	<li><a href="development">Development</a></li>
 	<li><a href="links">Links</a></li>
+	<li><a href="http://sourceforge.net/projects/viewgit/">SourceForge</a></li>
 </ul>
 </div>
 
