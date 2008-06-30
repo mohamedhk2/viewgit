@@ -3,6 +3,8 @@ $title = 'Links';
 require('inc/header.php');
 ?>
 
+<h2>Links</h2>
+
 <p>Related projects:</p>
 
 <ul>

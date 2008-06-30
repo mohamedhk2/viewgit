@@ -2,6 +2,8 @@
 require('inc/header.php');
 ?>
 
+<h2>About</h2>
+
 <p>ViewGit is a <a href="http://git.or.cz/">git</a> web repository viewer that aims to be easy to set up and upgrade, light on <a href="requirements">dependencies</a>, and comfortable to use.</p>
 
 <h2>Features</h2>
