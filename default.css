@@ -69,6 +69,11 @@ h2 {
 
 pre {
 	background-color: #ddd;
+	padding: 1em;
+}
+
+pre.license {
+	background-color: #ddd;
 	padding: 3em;
 	max-width: 50em;
 	display: block;
