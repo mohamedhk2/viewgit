@@ -17,6 +17,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 	<li><a href=".">About &amp; features</a></li>
 	<li><a href="license">License</a></li>
 	<li><a href="requirements">Requirements</a></li>
+	<li><a href="screenshots">Screenshots</a></li>
 	<li><a href="demo">Demo</a></li>
 	<li><a href="download">Download</a></li>
 	<li><a href="development">Development</a></li>
