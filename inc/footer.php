@@ -10,5 +10,20 @@ pageTracker._initData();
 pageTracker._trackPageview();
 </script>
 
+<!-- Piwik -->
+<a href="http://piwik.org" title="Website analytics" onclick="window.open(this.href);return(false);">
+<script language="javascript" src="http://piwik.fealdia.org/piwik.js" type="text/javascript"></script>
+<script type="text/javascript">
+<!--
+piwik_action_name = '';
+piwik_idsite = 3;
+piwik_url = 'http://piwik.fealdia.org/piwik.php';
+piwik_log(piwik_action_name, piwik_idsite, piwik_url);
+//-->
+</script><object>
+<noscript><p>Website analytics <img src="http://piwik.fealdia.org/piwik.php" style="border:0" alt="piwik"/></p>
+</noscript></object></a>
+<!-- /Piwik -->
+
 </body>
 </html>
