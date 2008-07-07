@@ -1,4 +1,5 @@
 <?php
+$title = 'Screenshots';
 require('inc/header.php');
 
 $images = array('index.png', 'summary.png', 'commit.png', 'commitdiff.png', 'tree.png');
