@@ -17,7 +17,7 @@ require('inc/header.php');
 	<li>Commit: details of the commit</li>
 	<li>Commitdiff: colored diff of the changes in a commit</li>
 	<li>Tree (directory) browsing with downloadable trees (as tar/gz and zip), and downloadable files</li>
-	<li>RSS feeds of changes with configurable item title/description content</li>
+	<li>RSS feeds of changes with configurable item title/description content - see the <strong><a href="viewgit-rss.xml">example feed</a></strong></li>
 	<li>(Optional) Checkouts using mod_rewrite and git-update-server-info in .git/hooks/post-update</li>
 	<li>Alternative project list configuration using globs/wildcards (useful for mass hosting of projects)</li>
 	<li>Optional e-mail address obfuscator</li>
