@@ -13,7 +13,7 @@ require('inc/header.php');
 <ul>
 	<li>Project index with description, last change, tree browsing, and download links</li>
 	<li>Project summary page with shortlog snippet and list of tags and heads (branches)</li>
-	<li>Shortlog: date of change, author, short message, and links to commit/commitdiff/tree/download</li>
+	<li>Shortlog: date of change, author, short message, tag/head/remote labels, and links to commit/commitdiff/tree/download</li>
 	<li>Commit: details of the commit</li>
 	<li>Commitdiff: colored diff of the changes in a commit</li>
 	<li>Tree (directory) browsing with downloadable trees (as tar/gz and zip), and downloadable files</li>
