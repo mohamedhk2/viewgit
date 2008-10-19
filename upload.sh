@@ -1,2 +1,2 @@
 #!/bin/sh
-rsync -avz --exclude .git --exclude upload.sh . sourceforge:/home/groups/v/vi/viewgit/htdocs
+rsync -avz --exclude .git --exclude upload.sh . viewgit.sourceforge.net:/home/groups/v/vi/viewgit/htdocs
