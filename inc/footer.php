@@ -25,7 +25,7 @@ piwik_log(piwik_action_name, piwik_idsite, piwik_url);
 </noscript></object></a>
 <!-- /Piwik -->
 
-<p><a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=232733&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a></p>
+<p><a href="http://sourceforge.net/projects/viewgit/"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=232733&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a></p>
 
 </body>
 </html>
