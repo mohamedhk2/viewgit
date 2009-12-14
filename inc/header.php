@@ -7,6 +7,8 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 	<title><?php echo isset($title) ? "$title - " : ''; ?>ViewGit - a git repository browser</title>
 	<link rel="stylesheet" href="default.css" type="text/css" />
 	<meta name="author" content="Heikki Hokkanen" />
+	<meta name="description" content="ViewGit is a git web repository viewer that aims to be easy to set up and upgrade, light on dependencies, and comfortable to use." />
+	<meta name="keywords" content="viewgit, git, frontend, repository, browser, viewer, web" />
 </head>
 <body>
 
