@@ -1,4 +1,13 @@
 <?php
+// For vhost migration. Forward viewgit.sourceforge.net to viewgit.fealdia.org
+if ($_SERVER['HTTP_HOST'] == 'viewgit.sourceforge.net') {
+	$forwardto = 'viewgit.fealdia.org';
+	// Just a sanity check, make sure the DNS record actually exists before forwarding
+	if (gethostbyname($forwardto) != $forwardto) {
+		header("Location: http://${forwardto}$_SERVER[REQUEST_URI]", true, 301);
+		die();
+	}
+}
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
