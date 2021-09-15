@@ -8,7 +8,7 @@ $conf['projects'] = array(
 	'foo' => array('repo' => '/home/user/projects/foo/.git'),
 	'bar' => array(
 		'repo' => '/home/user/projects/foo/.git',
-		'description' => 'Optional overridden description, otherwise it is taken from .git/description'
+		'description' => 'Optional overridden description, otherwise it is taken from .git/description',
 		'www' => 'http://www.google.com', # optional
 	),
 );

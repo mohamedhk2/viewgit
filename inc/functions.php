@@ -5,25 +5,25 @@
 
 function debug($msg)
 {
-	global $conf;
+    global $conf;
 
-	if ($conf['debug']) {
-		file_put_contents('php://stderr', strftime('%H:%M:%S') ." viewgit: $_SERVER[REMOTE_ADDR]:$_SERVER[REMOTE_PORT] $msg\n", FILE_APPEND);
-	}
+    if ($conf['debug']) {
+        file_put_contents('php://stderr', strftime('%H:%M:%S') . " viewgit: $_SERVER[REMOTE_ADDR]:$_SERVER[REMOTE_PORT] $msg\n", FILE_APPEND);
+    }
 }
 
 function fix_encoding($in_str)
 {
-	if (function_exists("mb_detect_encoding") && function_exists("mb_check_encoding")) {
-		$cur_encoding = mb_detect_encoding($in_str) ;
-		if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
-			return $in_str;
-		} else {
-			return utf8_encode($in_str);
-		}
-	} else {
-		return utf8_encode($in_str);
-	}
+    if (function_exists("mb_detect_encoding") && function_exists("mb_check_encoding")) {
+        $cur_encoding = mb_detect_encoding($in_str);
+        if ($cur_encoding == "UTF-8" && mb_check_encoding($in_str, "UTF-8")) {
+            return $in_str;
+        } else {
+            return utf8_encode($in_str);
+        }
+    } else {
+        return utf8_encode($in_str);
+    }
 }
 
 /**
@@ -31,14 +31,14 @@ function fix_encoding($in_str)
  */
 function format_author($author)
 {
-	global $page;
+    global $page;
 
-	if (isset($page['project'])) {
-		// FIXME 'h' - use only if available
-		return '<a href="'. makelink(array('a' => 'search', 'p' => $page['project'], 'h' => 'HEAD', 'st' => 'author', 's' => $author)) .'">'. htmlentities_wrapper($author) .'</a>';
-	} else {
-		return htmlentities_wrapper($author);
-	}
+    if (isset($page['project'])) {
+        // FIXME 'h' - use only if available
+        return '<a href="' . makelink(array('a' => 'search', 'p' => $page['project'], 'h' => 'HEAD', 'st' => 'author', 's' => $author)) . '">' . htmlentities_wrapper($author) . '</a>';
+    } else {
+        return htmlentities_wrapper($author);
+    }
 }
 
 /**
@@ -47,39 +47,38 @@ function format_author($author)
  */
 function format_diff($text)
 {
-	$files = array();
+    $files = array();
 
-	// match every "^diff --git a/<path> b/<path>$" line
-	foreach (explode("\n", $text) as $line) {
-		if (preg_match('#^diff --git a/(.*) b/(.*)$#', $line, $matches) > 0) {
-			$files[$matches[1]] = urlencode($matches[1]);
-		}
-	}
+    // match every "^diff --git a/<path> b/<path>$" line
+    foreach (explode("\n", $text) as $line) {
+        if (preg_match('#^diff --git a/(.*) b/(.*)$#', $line, $matches) > 0) {
+            $files[$matches[1]] = urlencode($matches[1]);
+        }
+    }
 
-	$text = htmlentities_wrapper($text);
+    $text = htmlentities_wrapper($text);
 
-	$text = preg_replace(
-		array(
-			'/^(\+.*)$/m',
-			'/^(-.*)$/m',
-			'/^(@.*)$/m',
-			'/^([^d\+-@].*)$/m',
-		),
-		array(
-			'<span class="add">$1</span>',
-			'<span class="del">$1</span>',
-			'<span class="pos">$1</span>',
-			'<span class="etc">$1</span>',
-		),
-		$text);
-	$text = preg_replace_callback('#^diff --git a/(.*) b/(.*)$#m',
-		create_function(
-			'$m',
-			'return "<span class=\"diffline\"><a name=\"". urlencode($m[1]) ."\">diff --git a/$m[1] b/$m[2]</a></span>";'
-		),
-		$text);
+    $text = preg_replace(
+        array(
+            '/^(\+.*)$/m',
+            '/^(-.*)$/m',
+            '/^(@.*)$/m',
+            '/^([^d\+-@].*)$/m',
+        ),
+        array(
+            '<span class="add">$1</span>',
+            '<span class="del">$1</span>',
+            '<span class="pos">$1</span>',
+            '<span class="etc">$1</span>',
+        ),
+        $text);
+    $text = preg_replace_callback('#^diff --git a/(.*) b/(.*)$#m',
+        function ($m) {
+            return "<span class=\"diffline\"><a name=\"" . urlencode($m[1]) . "\">diff --git a/$m[1] b/$m[2]</a></span>";
+        },
+        $text);
 
-	return array($files, $text);
+    return array($files, $text);
 }
 
 /**
@@ -88,30 +87,30 @@ function format_diff($text)
  */
 function get_project_info($name)
 {
-	global $conf;
+    global $conf;
 
-	$info = $conf['projects'][$name];
-	$info['name'] = $name;
+    $info = $conf['projects'][$name];
+    $info['name'] = $name;
 
-	// If description is not set, read it from the repository's description
-	if (!isset($info['description'])) {
-		$info['description'] = @file_get_contents($info['repo'] .'/description');
-	}
+    // If description is not set, read it from the repository's description
+    if (!isset($info['description'])) {
+        $info['description'] = @file_get_contents($info['repo'] . '/description');
+    }
 
-	$headinfo = git_get_commit_info($name, 'HEAD');
-	$info['head_stamp'] = $headinfo['author_utcstamp'];
-	$info['head_datetime'] = strftime($conf['datetime'], $headinfo['author_utcstamp']);
-	$info['head_hash'] = $headinfo['h'];
-	$info['head_tree'] = $headinfo['tree'];
-	$info['message'] = $headinfo['message'];
+    $headinfo = git_get_commit_info($name, 'HEAD');
+    $info['head_stamp'] = $headinfo['author_utcstamp'];
+    $info['head_datetime'] = strftime($conf['datetime'], $headinfo['author_utcstamp']);
+    $info['head_hash'] = $headinfo['h'];
+    $info['head_tree'] = $headinfo['tree'];
+    $info['message'] = $headinfo['message'];
 
-	return $info;
+    return $info;
 }
 
 function git_describe($project, $commit)
 {
-	$output = run_git($project, "describe --always ". escapeshellarg($commit));
-	return $output[0];
+    $output = run_git($project, "describe --always " . escapeshellarg($commit));
+    return $output[0];
 }
 
 /**
@@ -119,15 +118,15 @@ function git_describe($project, $commit)
  */
 function git_diff($project, $from, $to)
 {
-	return join("\n", run_git($project, "diff \"$from..$to\""));
+    return join("\n", run_git($project, "diff \"$from..$to\""));
 }
 
 function git_diffstat($project, $commit, $commit_base = null)
 {
-	if (is_null($commit_base)) {
-		$commit_base = "$commit^";
-	}
-	return join("\n", run_git($project, "diff --stat $commit_base..$commit"));
+    if (is_null($commit_base)) {
+        $commit_base = "$commit^";
+    }
+    return join("\n", run_git($project, "diff --stat $commit_base..$commit"));
 }
 
 /**
@@ -135,21 +134,21 @@ function git_diffstat($project, $commit, $commit_base = null)
  */
 function git_get_changed_paths($project, $hash = 'HEAD')
 {
-	$result = array();
-	$affected_files = run_git($project, "show --pretty=\"format:\" --name-only $hash");
-	foreach ($affected_files as $file ) {
-		// The format above contains a blank line; Skip it.
-		if ($file == '') {
-			continue;
-		}
+    $result = array();
+    $affected_files = run_git($project, "show --pretty=\"format:\" --name-only $hash");
+    foreach ($affected_files as $file) {
+        // The format above contains a blank line; Skip it.
+        if ($file == '') {
+            continue;
+        }
 
-		$output = run_git($project, "ls-tree $hash $file");
-		foreach ($output as $line) {
-			$parts = preg_split('/\s+/', $line, 4);
-			$result[] = array('name' => $parts[3], 'hash' => $parts[2]);
-		}
-	}
-	return $result;
+        $output = run_git($project, "ls-tree $hash $file");
+        foreach ($output as $line) {
+            $parts = preg_split('/\s+/', $line, 4);
+            $result[] = array('name' => $parts[3], 'hash' => $parts[2]);
+        }
+    }
+    return $result;
 }
 
 /**
@@ -157,73 +156,69 @@ function git_get_changed_paths($project, $hash = 'HEAD')
  */
 function git_get_commit_info($project, $hash = 'HEAD', $path = null)
 {
-	global $conf;
+    global $conf;
 
-	$info = array();
-	$info['h_name'] = $hash;
-	$info['message_full'] = '';
-	$info['parents'] = array();
+    $info = array();
+    $info['h_name'] = $hash;
+    $info['message_full'] = '';
+    $info['parents'] = array();
 
-	$extra = '';
-	if (isset($path)) {
-		$extra = '-- '. escapeshellarg($path);
-	}
+    $extra = '';
+    if (isset($path)) {
+        $extra = '-- ' . escapeshellarg($path);
+    }
 
-	$output = run_git($project, "rev-list --header --max-count=1 $hash $extra");
-	// tree <h>
-	// parent <h>
-	// author <name> "<"<mail>">" <stamp> <timezone>
-	// committer
-	// <empty>
-	//     <message>
-	$pattern = '/^(author|committer) ([^<]+) <([^>]*)> ([0-9]+) (.*)$/';
-	foreach ($output as $line) {
-		if (substr($line, 0, 4) === 'tree') {
-			$info['tree'] = substr($line, 5);
-		}
-		// may be repeated multiple times for merge/octopus
-		elseif (substr($line, 0, 6) === 'parent') {
-			$info['parents'][] = substr($line, 7);
-		}
-		elseif (preg_match($pattern, $line, $matches) > 0) {
-			$info[$matches[1] .'_name'] = $matches[2];
-			$info[$matches[1] .'_mail'] = $matches[3];
-			$info[$matches[1] .'_stamp'] = $matches[4] + ((intval($matches[5]) / 100.0) * 3600);
-			$info[$matches[1] .'_timezone'] = $matches[5];
-			$info[$matches[1] .'_utcstamp'] = $matches[4];
+    $output = run_git($project, "rev-list --header --max-count=1 $hash $extra");
+    // tree <h>
+    // parent <h>
+    // author <name> "<"<mail>">" <stamp> <timezone>
+    // committer
+    // <empty>
+    //     <message>
+    $pattern = '/^(author|committer) ([^<]+) <([^>]*)> ([0-9]+) (.*)$/';
+    foreach ($output as $line) {
+        if (substr($line, 0, 4) === 'tree') {
+            $info['tree'] = substr($line, 5);
+        } // may be repeated multiple times for merge/octopus
+        elseif (substr($line, 0, 6) === 'parent') {
+            $info['parents'][] = substr($line, 7);
+        } elseif (preg_match($pattern, $line, $matches) > 0) {
+            $info[$matches[1] . '_name'] = $matches[2];
+            $info[$matches[1] . '_mail'] = $matches[3];
+            $info[$matches[1] . '_stamp'] = $matches[4] + ((intval($matches[5]) / 100.0) * 3600);
+            $info[$matches[1] . '_timezone'] = $matches[5];
+            $info[$matches[1] . '_utcstamp'] = $matches[4];
 
-			if (isset($conf['mail_filter'])) {
-				$info[$matches[1] .'_mail'] = $conf['mail_filter']($info[$matches[1] .'_mail']);
-			}
-		}
-		// Lines starting with four spaces and empty lines after first such line are part of commit message
-		elseif (substr($line, 0, 4) === '    ' || (strlen($line) == 0 && isset($info['message']))) {
-			$info['message_full'] .= substr($line, 4) ."\n";
-			if (!isset($info['message'])) {
-				$info['message'] = substr($line, 4, $conf['commit_message_maxlen']);
-				$info['message_firstline'] = substr($line, 4);
-			}
-		}
-		elseif (preg_match('/^[0-9a-f]{40}$/', $line) > 0) {
-			$info['h'] = $line;
-		}
-	}
+            if (isset($conf['mail_filter'])) {
+                $info[$matches[1] . '_mail'] = $conf['mail_filter']($info[$matches[1] . '_mail']);
+            }
+        } // Lines starting with four spaces and empty lines after first such line are part of commit message
+        elseif (substr($line, 0, 4) === '    ' || (strlen($line) == 0 && isset($info['message']))) {
+            $info['message_full'] .= substr($line, 4) . "\n";
+            if (!isset($info['message'])) {
+                $info['message'] = substr($line, 4, $conf['commit_message_maxlen']);
+                $info['message_firstline'] = substr($line, 4);
+            }
+        } elseif (preg_match('/^[0-9a-f]{40}$/', $line) > 0) {
+            $info['h'] = $line;
+        }
+    }
 
-	// This is a workaround for the unlikely situation where a commit does
-	// not have a message. Such a commit can be created with the following
-	// command:
-	// git commit --allow-empty -m '' --cleanup=verbatim
-	if (!array_key_exists('message', $info)) {
-		$info['message'] = '(no message)';
-		$info['message_firstline'] = '(no message)';
-	}
+    // This is a workaround for the unlikely situation where a commit does
+    // not have a message. Such a commit can be created with the following
+    // command:
+    // git commit --allow-empty -m '' --cleanup=verbatim
+    if (!array_key_exists('message', $info)) {
+        $info['message'] = '(no message)';
+        $info['message_firstline'] = '(no message)';
+    }
 
-	$info['author_datetime'] = strftime($conf['datetime_full'], $info['author_utcstamp']);
-	$info['author_datetime_local'] = strftime($conf['datetime_full'], $info['author_stamp']) .' '. $info['author_timezone'];
-	$info['committer_datetime'] = strftime($conf['datetime_full'], $info['committer_utcstamp']);
-	$info['committer_datetime_local'] = strftime($conf['datetime_full'], $info['committer_stamp']) .' '. $info['committer_timezone'];
+    $info['author_datetime'] = strftime($conf['datetime_full'], $info['author_utcstamp']);
+    $info['author_datetime_local'] = strftime($conf['datetime_full'], $info['author_stamp']) . ' ' . $info['author_timezone'];
+    $info['committer_datetime'] = strftime($conf['datetime_full'], $info['committer_utcstamp']);
+    $info['committer_datetime_local'] = strftime($conf['datetime_full'], $info['committer_stamp']) . ' ' . $info['committer_timezone'];
 
-	return $info;
+    return $info;
 }
 
 /**
@@ -231,22 +226,21 @@ function git_get_commit_info($project, $hash = 'HEAD', $path = null)
  */
 function git_get_heads($project)
 {
-	$heads = array();
+    $heads = array();
 
-	$output = run_git($project, 'show-ref --heads');
-	foreach ($output as $line) {
-		$fullname = substr($line, 41);
-		$tmp = explode('/', $fullname);
-		$name = array_pop($tmp);
-		$pre = array_pop($tmp);
-		if ($pre != 'heads')
-		{
-			$name = $pre . '/' . $name;
-		}
-		$heads[] = array('h' => substr($line, 0, 40), 'fullname' => "$fullname", 'name' => "$name");
-	}
+    $output = run_git($project, 'show-ref --heads');
+    foreach ($output as $line) {
+        $fullname = substr($line, 41);
+        $tmp = explode('/', $fullname);
+        $name = array_pop($tmp);
+        $pre = array_pop($tmp);
+        if ($pre != 'heads') {
+            $name = $pre . '/' . $name;
+        }
+        $heads[] = array('h' => substr($line, 0, 40), 'fullname' => "$fullname", 'name' => "$name");
+    }
 
-	return $heads;
+    return $heads;
 }
 
 /**
@@ -257,46 +251,47 @@ function git_get_heads($project)
  */
 function git_get_path_info($project, $root_hash, $path)
 {
-	if (strlen($path) > 0) {
-		$parts = explode('/', $path);
-	} else {
-		$parts = array();
-	}
+    if (strlen($path) > 0) {
+        $parts = explode('/', $path);
+    } else {
+        $parts = array();
+    }
 
-	$pathinfo = array();
+    $pathinfo = array();
 
-	$tid = $root_hash;
-	$pathinfo = array();
-	foreach ($parts as $p) {
-		$entry = git_ls_tree_part($project, $tid, $p);
-		if (is_null($entry)) {
-			die('Invalid path info.');
-		}
-		$pathinfo[] = $entry;
-		$tid = $entry['hash'];
-	}
+    $tid = $root_hash;
+    $pathinfo = array();
+    foreach ($parts as $p) {
+        $entry = git_ls_tree_part($project, $tid, $p);
+        if (is_null($entry)) {
+            die('Invalid path info.');
+        }
+        $pathinfo[] = $entry;
+        $tid = $entry['hash'];
+    }
 
-	return $pathinfo;
+    return $pathinfo;
 }
 
 /**
  * Get revision list starting from given commit.
+ *
  * @param skip how many hashes to skip from the beginning
  * @param max_count number of commit hashes to return, or all if not given
  * @param start revision to start from, or HEAD if not given
  */
 function git_get_rev_list($project, $skip = 0, $max_count = null, $start = 'HEAD')
 {
-	$cmd = "rev-list ";
-	if ($skip != 0) {
-		$cmd .= "--skip=$skip ";
-	}
-	if (!is_null($max_count)) {
-		$cmd .= "--max-count=$max_count ";
-	}
-	$cmd .= $start;
+    $cmd = "rev-list ";
+    if ($skip != 0) {
+        $cmd .= "--skip=$skip ";
+    }
+    if (!is_null($max_count)) {
+        $cmd .= "--max-count=$max_count ";
+    }
+    $cmd .= $start;
 
-	return run_git($project, $cmd);
+    return run_git($project, $cmd);
 }
 
 /**
@@ -304,35 +299,37 @@ function git_get_rev_list($project, $skip = 0, $max_count = null, $start = 'HEAD
  */
 function git_get_tags($project)
 {
-	$tags = array();
+    $tags = array();
 
-	$output = run_git($project, 'show-ref --tags');
-	foreach ($output as $line) {
-		$fullname = substr($line, 41);
-		$tmp = explode('/', $fullname);
-		$name = array_pop($tmp);
-		$tags[] = array('h' => substr($line, 0, 40), 'fullname' => $fullname, 'name' => $name);
-	}
-	return $tags;
+    $output = run_git($project, 'show-ref --tags');
+    foreach ($output as $line) {
+        $fullname = substr($line, 41);
+        $tmp = explode('/', $fullname);
+        $name = array_pop($tmp);
+        $tags[] = array('h' => substr($line, 0, 40), 'fullname' => $fullname, 'name' => $name);
+    }
+    return $tags;
 }
 
 /**
  * Get information about objects in a tree.
+ *
  * @param tree tree or commit hash
+ *
  * @return list of arrays containing name, mode, type, hash
  */
 function git_ls_tree($project, $tree)
 {
-	$entries = array();
-	$output = run_git($project, "ls-tree $tree");
-	// 100644 blob 493b7fc4296d64af45dac64bceac2d9a96c958c1    .gitignore
-	// 040000 tree 715c78b1011dc58106da2a1af2fe0aa4c829542f    doc
-	foreach ($output as $line) {
-		$parts = preg_split('/\s+/', $line, 4);
-		$entries[] = array('name' => $parts[3], 'mode' => $parts[0], 'type' => $parts[1], 'hash' => $parts[2]);
-	}
+    $entries = array();
+    $output = run_git($project, "ls-tree $tree");
+    // 100644 blob 493b7fc4296d64af45dac64bceac2d9a96c958c1    .gitignore
+    // 040000 tree 715c78b1011dc58106da2a1af2fe0aa4c829542f    doc
+    foreach ($output as $line) {
+        $parts = preg_split('/\s+/', $line, 4);
+        $entries[] = array('name' => $parts[3], 'mode' => $parts[0], 'type' => $parts[1], 'hash' => $parts[2]);
+    }
 
-	return $entries;
+    return $entries;
 }
 
 /**
@@ -340,38 +337,43 @@ function git_ls_tree($project, $tree)
  */
 function git_ls_tree_part($project, $tree, $name)
 {
-	$entries = git_ls_tree($project, $tree);
-	foreach ($entries as $entry) {
-		if ($entry['name'] === $name) {
-			return $entry;
-		}
-	}
-	return null;
+    $entries = git_ls_tree($project, $tree);
+    foreach ($entries as $entry) {
+        if ($entry['name'] === $name) {
+            return $entry;
+        }
+    }
+    return null;
 }
 
 /**
  * Get the ref list as dict: hash -> list of names.
+ *
  * @param tags whether to show tags
  * @param heads whether to show heads
  * @param remotes whether to show remote heads, currently implies tags and heads too.
  */
 function git_ref_list($project, $tags = true, $heads = true, $remotes = true)
 {
-	$cmd = "show-ref --dereference";
-	if (!$remotes) {
-		if ($tags) { $cmd .= " --tags"; }
-		if ($heads) { $cmd .= " --heads"; }
-	}
+    $cmd = "show-ref --dereference";
+    if (!$remotes) {
+        if ($tags) {
+            $cmd .= " --tags";
+        }
+        if ($heads) {
+            $cmd .= " --heads";
+        }
+    }
 
-	$result = array();
-	$output = run_git($project, $cmd);
-	foreach ($output as $line) {
-		// <hash> <ref>
-		$parts = explode(' ', $line, 2);
-		$name = str_replace(array('refs/', '^{}'), array('', ''), $parts[1]);
-		$result[$parts[0]][] = $name;
-	}
-	return $result;
+    $result = array();
+    $output = run_git($project, $cmd);
+    foreach ($output as $line) {
+        // <hash> <ref>
+        $parts = explode(' ', $line, 2);
+        $name = str_replace(array('refs/', '^{}'), array('', ''), $parts[1]);
+        $result[$parts[0]][] = $name;
+    }
+    return $result;
 }
 
 /**
@@ -379,32 +381,28 @@ function git_ref_list($project, $tags = true, $heads = true, $remotes = true)
  */
 function git_search_commits($project, $branch, $type, $string)
 {
-	// git log -sFOO
-	if ($type == 'change') {
-		$cmd = 'log -S'. escapeshellarg($string);
-	}
-	elseif ($type == 'commit') {
-		$cmd = 'log -i --grep='. escapeshellarg($string);
-	}
-	elseif ($type == 'author') {
-		$cmd = 'log -i --author='. escapeshellarg($string);
-	}
-	elseif ($type == 'committer') {
-		$cmd = 'log -i --committer='. escapeshellarg($string);
-	}
-	else {
-		die('Unsupported type');
-	}
-	$cmd .= ' '. $branch;
-	$lines = run_git($project, $cmd);
+    // git log -sFOO
+    if ($type == 'change') {
+        $cmd = 'log -S' . escapeshellarg($string);
+    } elseif ($type == 'commit') {
+        $cmd = 'log -i --grep=' . escapeshellarg($string);
+    } elseif ($type == 'author') {
+        $cmd = 'log -i --author=' . escapeshellarg($string);
+    } elseif ($type == 'committer') {
+        $cmd = 'log -i --committer=' . escapeshellarg($string);
+    } else {
+        die('Unsupported type');
+    }
+    $cmd .= ' ' . $branch;
+    $lines = run_git($project, $cmd);
 
-	$result = array();
-	foreach ($lines as $line) {
-		if (preg_match('/^commit (.*?)$/', $line, $matches)) {
-			$result[] = $matches[1];
-		}
-	}
-	return $result;
+    $result = array();
+    foreach ($lines as $line) {
+        if (preg_match('/^commit (.*?)$/', $line, $matches)) {
+            $result[] = $matches[1];
+        }
+    }
+    return $result;
 }
 
 /**
@@ -412,31 +410,31 @@ function git_search_commits($project, $branch, $type, $string)
  */
 function handle_shortlog($project, $hash = 'HEAD', $page = 0)
 {
-	global $conf;
+    global $conf;
 
-	$refs_by_hash = git_ref_list($project, true, true, $conf['shortlog_remote_labels']);
+    $refs_by_hash = git_ref_list($project, true, true, $conf['shortlog_remote_labels']);
 
-	$result = array();
-	$revs = git_get_rev_list($project, $page * $conf['summary_shortlog'], $conf['summary_shortlog'], $hash);
-	foreach ($revs as $rev) {
-		$info = git_get_commit_info($project, $rev);
-		$refs = array();
-		if (in_array($rev, array_keys($refs_by_hash))) {
-			$refs = $refs_by_hash[$rev];
-		}
-		$result[] = array(
-			'author' => $info['author_name'],
-			'date' => strftime($conf['datetime'], $info['author_utcstamp']),
-			'message' => $info['message'],
-			'commit_id' => $rev,
-			'tree' => $info['tree'],
-			'refs' => $refs,
-		);
-	}
-	#print_r($result);
-	#die();
+    $result = array();
+    $revs = git_get_rev_list($project, $page * $conf['summary_shortlog'], $conf['summary_shortlog'], $hash);
+    foreach ($revs as $rev) {
+        $info = git_get_commit_info($project, $rev);
+        $refs = array();
+        if (in_array($rev, array_keys($refs_by_hash))) {
+            $refs = $refs_by_hash[$rev];
+        }
+        $result[] = array(
+            'author' => $info['author_name'],
+            'date' => strftime($conf['datetime'], $info['author_utcstamp']),
+            'message' => $info['message'],
+            'commit_id' => $rev,
+            'tree' => $info['tree'],
+            'refs' => $refs,
+        );
+    }
+    #print_r($result);
+    #die();
 
-	return $result;
+    return $result;
 }
 
 /**
@@ -446,46 +444,47 @@ function handle_shortlog($project, $hash = 'HEAD', $page = 0)
  */
 function handle_tags($project, $limit = 0)
 {
-	global $conf;
+    global $conf;
 
-	$tags = git_get_tags($project);
-	$result = array();
-	foreach ($tags as $tag) {
-		$info = git_get_commit_info($project, $tag['h']);
-		$result[] = array(
-			'stamp' => $info['author_utcstamp'],
-			'date' => strftime($conf['datetime'], $info['author_utcstamp']),
-			'h' => $tag['h'],
-			'fullname' => $tag['fullname'],
-			'name' => $tag['name'],
-		);
-	}
+    $tags = git_get_tags($project);
+    $result = array();
+    foreach ($tags as $tag) {
+        $info = git_get_commit_info($project, $tag['h']);
+        $result[] = array(
+            'stamp' => $info['author_utcstamp'],
+            'date' => strftime($conf['datetime'], $info['author_utcstamp']),
+            'h' => $tag['h'],
+            'fullname' => $tag['fullname'],
+            'name' => $tag['name'],
+        );
+    }
 
-	// sort tags newest first
-	// aka. two more reasons to hate PHP (figuring those out is your homework:)
-	usort($result, create_function(
-		'$x, $y',
-		'$a = $x["stamp"]; $b = $y["stamp"]; return ($a == $b ? 0 : ($a > $b ? -1 : 1));'
-	));
+    // sort tags newest first
+    // aka. two more reasons to hate PHP (figuring those out is your homework:)
+    usort($result, function ($x, $y) {
+        $a = $x["stamp"];
+        $b = $y["stamp"];
+        return ($a == $b ? 0 : ($a > $b ? -1 : 1));
+    });
 
-	// TODO optimize this some way, currently all tags are fetched when only a
-	// few are shown. The problem is that without fetching the commit info
-	// above, we can't sort using dates, only by tag name...
-	if ($limit > 0) {
-		$result = array_splice($result, 0, $limit);
-	}
+    // TODO optimize this some way, currently all tags are fetched when only a
+    // few are shown. The problem is that without fetching the commit info
+    // above, we can't sort using dates, only by tag name...
+    if ($limit > 0) {
+        $result = array_splice($result, 0, $limit);
+    }
 
-	return $result;
+    return $result;
 }
 
 function htmlentities_wrapper($text)
 {
-	return htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $text), ENT_NOQUOTES, 'UTF-8');
+    return htmlentities(@iconv('UTF-8', 'UTF-8//IGNORE', $text), ENT_NOQUOTES, 'UTF-8');
 }
 
 function xmlentities_wrapper($text)
 {
-	return str_replace(array('&', '<'), array('&#x26;', '&#x3C;'), @iconv('UTF-8', 'UTF-8//IGNORE', $text));
+    return str_replace(array('&', '<'), array('&#x26;', '&#x3C;'), @iconv('UTF-8', 'UTF-8//IGNORE', $text));
 }
 
 /**
@@ -493,14 +492,14 @@ function xmlentities_wrapper($text)
  */
 function makelink($dict)
 {
-	$params = array();
-	foreach ($dict as $k => $v) {
-		$params[] = rawurlencode($k) .'='. str_replace('%2F', '/', rawurlencode($v));
-	}
-	if (count($params) > 0) {
-		return '?'. htmlentities_wrapper(join('&', $params));
-	}
-	return '';
+    $params = array();
+    foreach ($dict as $k => $v) {
+        $params[] = rawurlencode($k) . '=' . str_replace('%2F', '/', rawurlencode($v));
+    }
+    if (count($params) > 0) {
+        return '?' . htmlentities_wrapper(join('&', $params));
+    }
+    return '';
 }
 
 /**
@@ -508,7 +507,7 @@ function makelink($dict)
  */
 function obfuscate_mail($mail)
 {
-	return str_replace(array('@', '.'), array(' at ', ' dot '), $mail);
+    return str_replace(array('@', '.'), array(' at ', ' dot '), $mail);
 }
 
 /**
@@ -518,28 +517,28 @@ function obfuscate_mail($mail)
  */
 function rss_item_format($format, $info)
 {
-	return preg_replace(array(
-		'/{AUTHOR}/',
-		'/{AUTHOR_MAIL}/',
-		'/{SHORTLOG}/',
-		'/{LOG}/',
-		'/{COMMITTER}/',
-		'/{COMMITTER_MAIL}/',
-		'/{DIFFSTAT}/',
-	), array(
-		htmlentities_wrapper($info['author_name']),
-		htmlentities_wrapper($info['author_mail']),
-		htmlentities_wrapper($info['message_firstline']),
-		htmlentities_wrapper($info['message_full']),
-		htmlentities_wrapper($info['committer_name']),
-		htmlentities_wrapper($info['committer_mail']),
-		htmlentities_wrapper(isset($info['diffstat']) ? $info['diffstat'] : ''),
-	), $format);
+    return preg_replace(array(
+        '/{AUTHOR}/',
+        '/{AUTHOR_MAIL}/',
+        '/{SHORTLOG}/',
+        '/{LOG}/',
+        '/{COMMITTER}/',
+        '/{COMMITTER_MAIL}/',
+        '/{DIFFSTAT}/',
+    ), array(
+        htmlentities_wrapper($info['author_name']),
+        htmlentities_wrapper($info['author_mail']),
+        htmlentities_wrapper($info['message_firstline']),
+        htmlentities_wrapper($info['message_full']),
+        htmlentities_wrapper($info['committer_name']),
+        htmlentities_wrapper($info['committer_mail']),
+        htmlentities_wrapper(isset($info['diffstat']) ? $info['diffstat'] : ''),
+    ), $format);
 }
 
 function rss_pubdate($secs)
 {
-	return gmdate('D, d M Y H:i:s O', $secs);
+    return gmdate('D, d M Y H:i:s O', $secs);
 }
 
 /**
@@ -548,19 +547,19 @@ function rss_pubdate($secs)
  */
 function run_git($project, $command)
 {
-	global $conf;
+    global $conf;
 
-	$output = array();
-	$cmd = $conf['git'] ." --git-dir=". escapeshellarg($conf['projects'][$project]['repo']) ." $command";
-	$ret = 0;
-	exec($cmd, $output, $ret);
-	if ($conf['debug_command_trace']) {
-		static $count = 0;
-		$count++;
-		trigger_error("[$count]\$ $cmd [exit $ret]");
-	}
-	//if ($ret != 0) { die('FATAL: exec() for git failed, is the path properly configured?'); }
-	return $output;
+    $output = array();
+    $cmd = $conf['git'] . " --git-dir=" . escapeshellarg($conf['projects'][$project]['repo']) . " $command";
+    $ret = 0;
+    exec($cmd, $output, $ret);
+    if ($conf['debug_command_trace']) {
+        static $count = 0;
+        $count++;
+        trigger_error("[$count]\$ $cmd [exit $ret]");
+    }
+    //if ($ret != 0) { die('FATAL: exec() for git failed, is the path properly configured?'); }
+    return $output;
 }
 
 /**
@@ -569,17 +568,17 @@ function run_git($project, $command)
  */
 function run_git_passthru($project, $command)
 {
-	global $conf;
+    global $conf;
 
-	$cmd = $conf['git'] ." --git-dir=". escapeshellarg($conf['projects'][$project]['repo']) ." $command";
-	$result = 0;
-	passthru($cmd, $result);
-	return $result;
+    $cmd = $conf['git'] . " --git-dir=" . escapeshellarg($conf['projects'][$project]['repo']) . " $command";
+    $result = 0;
+    passthru($cmd, $result);
+    return $result;
 }
 
 function tpl_extlink($link)
 {
-	echo "<a href=\"$link\" class=\"external\">&#8599;</a>";
+    echo "<a href=\"$link\" class=\"external\">&#8599;</a>";
 }
 
 /**
@@ -589,12 +588,12 @@ function tpl_extlink($link)
  */
 function validate_project($project)
 {
-	global $conf;
+    global $conf;
 
-	if (!in_array($project, array_keys($conf['projects']))) {
-		die('Invalid project');
-	}
-	return $project;
+    if (!in_array($project, array_keys($conf['projects']))) {
+        die('Invalid project');
+    }
+    return $project;
 }
 
 /**
@@ -603,11 +602,11 @@ function validate_project($project)
  */
 function validate_hash($hash)
 {
-	if (!preg_match('/^[0-9a-z]{40}$/', $hash) && !preg_match('!^refs/(heads|tags)/[-_.0-9a-zA-Z/]+$!', $hash) && $hash !== 'HEAD') {
-		die('Invalid hash');
+    if (!preg_match('/^[0-9a-z]{40}$/', $hash) && !preg_match('!^refs/(heads|tags)/[-_.0-9a-zA-Z/]+$!', $hash) && $hash !== 'HEAD') {
+        die('Invalid hash');
 
-	}
-	return $hash;
+    }
+    return $hash;
 }
 
 /**
@@ -616,42 +615,42 @@ function validate_hash($hash)
  */
 function vg_error_handler($errno, $errstr, $errfile, $errline)
 {
-	global $page;
+    global $page;
 
-	$mask = ini_get('error_reporting');
+    $mask = ini_get('error_reporting');
 
-	$class = 'error';
+    $class = 'error';
 
-	// If mask for this error is not enabled, return silently
-	if (!($errno & $mask)) {
-		return true;
-	}
+    // If mask for this error is not enabled, return silently
+    if (!($errno & $mask)) {
+        return true;
+    }
 
-	// Remove any preceding path until viewgit's directory
-	$file = $errfile;
-	$file = strstr($file, 'viewgit/');
+    // Remove any preceding path until viewgit's directory
+    $file = $errfile;
+    $file = strstr($file, 'viewgit/');
 
-	$message = "$file:$errline $errstr [$errno]";
+    $message = "$file:$errline $errstr [$errno]";
 
-	switch ($errno) {
-		case E_ERROR:
-			$class = 'error';
-			break;
-		case E_WARNING:
-			$class = 'warning';
-			break;
-		case E_NOTICE:
-		case E_STRICT:
-		default:
-			$class = 'info';
-			break;
-	}
+    switch ($errno) {
+        case E_ERROR:
+            $class = 'error';
+            break;
+        case E_WARNING:
+            $class = 'warning';
+            break;
+        case E_NOTICE:
+        case E_STRICT:
+        default:
+            $class = 'info';
+            break;
+    }
 
-	$page['notices'][] = array(
-		'message' => $message,
-		'class' => $class,
-	);
+    $page['notices'][] = array(
+        'message' => $message,
+        'class' => $class,
+    );
 
-	return true;
+    return true;
 }
 

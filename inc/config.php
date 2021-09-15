@@ -39,7 +39,7 @@ $conf['timezone'] = 'UTC';
 $conf['commit_message_maxlen'] = 50;
 
 // Maximum number of shortlog entries to show on the summary page
-$conf['summary_shortlog'] = 15;
+$conf['summary_shortlog'] = 1500;
 
 // Maximum number of tags to show on the summary page
 $conf['summary_tags'] = 10;
